@@ -22,6 +22,8 @@
 	$: monster2ID = $page.url.searchParams.get('monster2ID') || '';
 	$: monster2 = data.monsters.find((monster) => monster.id === monster2ID);
 
+	$: selectedGenerationID = $page.url.searchParams.get('generation_id') || '';
+
 	const updateSearchParams = (key: string, value: string) => {
 		const searchParams = new URLSearchParams($page.url.searchParams);
 		searchParams.set(key, value);
@@ -29,7 +31,6 @@
 	};
 
 	const submitSearch = (e: Event) => {
-		e.preventDefault();
 		searchTerm = form.searchString;
 	};
 </script>
@@ -43,14 +44,25 @@
 {/if}
 
 <div class="generations">
+	<button
+		class="generation"
+		class:active={selectedGenerationID === 'all'}
+		on:click={() => updateSearchParams('generation_id', 'all')}
+	>
+		All
+	</button>
 	{#each generations as generation (generation.id)}
-		<div class="generation">
+		<button
+			class="generation"
+			class:active={selectedGenerationID === generation.id.toString()}
+			on:click={() => updateSearchParams('generation_id', generation.id.toString())}
+		>
 			{generation.main_region}
-		</div>
+		</button>
 	{/each}
 </div>
 
-<form class="search-form" on:submit={submitSearch}>
+<form class="search-form" on:submit|preventDefault={submitSearch}>
 	<input type="text" bind:value={form.searchString} placeholder="Pokemon Name" />
 	<input type="submit" value="Search" />
 </form>
@@ -74,10 +86,20 @@
 		border: 1px solid black;
 		background-color: #f9f9f9;
 		color: #333;
+		cursor: pointer;
+	}
+
+	.generation.active {
+		background-color: #333;
+		color: #fff;
 	}
 
 	.generation:hover {
 		background-color: #eee;
+	}
+
+	.generation.active:hover {
+		background-color: #555;
 	}
 
 	.monsters {
