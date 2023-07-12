@@ -12,24 +12,35 @@
 	<div on:click={() => (isInteractive ? updateSearchParams('monsterID', monster.id) : null)}>
 		<div class="monster-content">
 			<img src={monster.image} alt={monster.name} />
-			<p>{monster.name}</p>
+			{#if !isInteractive}
+				<div class="monster-name">
+					<p>{monster.name}</p>
+				</div>
+			{/if}
 		</div>
 		<div class="monster-id">{monster.id}</div>
 	</div>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{#if isInteractive}
-		<button class="secondary" on:click={() => updateSearchParams('monster2ID', monster.id)}>
-			Add as secondary
-		</button>
+		<div class="monster-name">
+			<p>{monster.name}</p>
+			<button class="secondary" on:click={() => updateSearchParams('monster2ID', monster.id)}>
+				Add as secondary
+			</button>
+		</div>
 	{/if}
 </div>
 
 <style>
 	.monster {
-		width: 100px;
+		width: 150px;
 		margin: 10px;
 		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
 		position: relative;
 		background-color: #eee;
 	}
@@ -41,7 +52,6 @@
 	.monster-content {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 	}
 
 	.monster-id {
@@ -51,6 +61,14 @@
 		font-size: 0.8em;
 		font-weight: bold;
 		color: #888;
+	}
+
+	.monster-name {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 5px;
 	}
 
 	.secondary {
